@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:12:46 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/06 16:58:52 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/15 10:27:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,6 @@
 # include <stdio.h>
 # include <unistd.h>
 
-// typedef struct s_list
-// {
-// 	int	argc;
-// 	int	**argv;
-// }		t_list;
-
-int	pipex(int argc, char **argv);
+int	main(int argc, char **argv, char **envp);
 
 #endif
