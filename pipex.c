@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/16 15:23:16 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/17 12:19:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <errno.h>
+#include <sys/errno.h>
 #include <fcntl.h>
 // #include "ft_printf.h"
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	}
 	input = open("argv[1]", O_RDONLY);
-	output = open(argv[5], O_CREAT, O_WRONLY);
+	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC);
 	if (pipe(fd) == -1)
 	{
 		printf("PIPE ERROR");
@@ -70,7 +70,7 @@ int	main(int argc, char **argv, char **envp)
 			return (0);
 		close(fd[0]);
 		close(output);
-		execve("wc -l", &argv[5], envp);
+		execve("wc -l", &argv[4], envp);
 	}
 	close(fd[0]);
 	close(fd[1]);

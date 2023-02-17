@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pipex.h                                            :+:    :+:            */
+/*   find_path.c                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/02/06 15:12:46 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/17 12:20:58 by evoronin      ########   odam.nl         */
+/*   Created: 2023/02/17 12:21:54 by evoronin      #+#    #+#                 */
+/*   Updated: 2023/02/17 12:23:43 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+// "../../usr/bin"
+#include "pipex.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <sys/errno.h>
+#include <fcntl.h>
+// #include "ft_printf.h"
 
-# include <stdio.h>
-# include <unistd.h>
+char *find_path(char **envp)
+{
+	int i = 0;
+	int j = 0;
 
-#include PATH=/Users/evoronin/Documents/libft
-
-int	main(int argc, char **argv, char **envp);
-
-#endif
+	while(envp[i] != '\0')
+	{
+		if envp[i][j] = "PATH="
+	}
+}
