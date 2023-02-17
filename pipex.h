@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:12:46 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/17 12:20:58 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/17 13:54:53 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include <stdio.h>
 # include <unistd.h>
-
-#include PATH=/Users/evoronin/Documents/libft
+# include "/Users/evoronin/Documents/libft/libft.h"
+# include "/Users/evoronin/Documents/printf/ft_printf.h"
 
 int	main(int argc, char **argv, char **envp);
 
