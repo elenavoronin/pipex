@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/17 12:21:54 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/17 14:31:59 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/17 17:18:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,40 +27,36 @@
 // add command to directory (plus the flag)
 // go through all possible directory combos
 
-// int	ft_strlen(const char *s)
-// {
-// 	size_t	i;
-
-// 	i = 0;
-// 	while (s[i] != '\0')
-// 	{
-// 		i++;
-// 	}
-// 	return (i);
-// }
-
-char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
+int	ft_strlen(const char *s)
 {
-	char		*src;
-	char		*find;
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+char	*find_path(char *str, char *needle, size_t len)
+{
 	size_t		i;
 	size_t		size;
 
-	src = (char *)haystack;
-	find = (char *)needle;
 	i = 0;
 	size = 0;
-	if (find[size] == '\0')
-		return (src);
-	while (i < len && src[i] != '\0')
+	if (str[size] == '\0')
+		return (needle);
+	while (i < len && needle[i] != '\0')
 	{
-		if (src[i + size] == find[size])
+		if (needle[i + size] == str[size])
 		{
-			while (find[size] != '\0' && src[i + size] == find[size]
-				&& (i + size) < len && src[i + size] != '\0')
+			while (str[size] != '\0' && needle[i + size] == str[size]
+				&& (i + size) < len && needle[i + size] != '\0')
 					size++;
-			if (size == (size_t)ft_strlen(find))
-				return (&src[i]);
+			if (size == (size_t)ft_strlen(str))
+				return (&needle[i]);
 		}
 		size = 0;
 		i++;
@@ -68,49 +64,10 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 	return (NULL);
 }
 
-
-char	*find_path(char **envp)
-{
-	char	*find;
-	size_t	size;
-	int		fd;
-
-	fd = open(path, O_RDONLY);
-	size = sizeof("PATH=");
-	find = ft_strnstr(path, "PATH=", size);
-	close(fd);
-	return (*&find);
-}
-
 int	main(void)
 {
-	int		fd;
-	int 	size;
-	char 	*path = "/usr/bin/env";
-	char	*env;
+	char	*envp;
 
-	size = sizeof("PATH=");
-	fd = open(path, O_RDONLY);
-	if (fd < 0)
-		return(0);
-	env = malloc(sizeof(fd));
-	if (!env)
-		return(0);
-	while(get_next_line(fd))
-	{
-		env = get_next_line(fd);
-		if (!env)
-		{
-			free(env);
-			return (0);
-		}
-	}
-	
-	printf("%s", ft_strnstr(env, "PATH=", size));
-	close(fd);
-	free(env);
+	printf("%s", find_path(envp, "PATH=", sizeof("PATH=")));
 	return (0);
-	// printf("%s", env);
-	// printf("%s\n", find_path(path));
-	// return (0);
 }

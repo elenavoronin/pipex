@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/17 12:19:45 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/17 17:16:04 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,43 @@
 #include <sys/errno.h>
 #include <fcntl.h>
 // #include "ft_printf.h"
+
+int	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+char	*find_path(char *envp, char *needle, size_t len)
+{
+	size_t		i;
+	size_t		size;
+
+	i = 0;
+	size = 0;
+	if (envp[size] == '\0')
+		return (needle);
+	while (i < len && needle[i] != '\0')
+	{
+		if (needle[i + size] == envp[size])
+		{
+			while (envp[size] != '\0' && needle[i + size] == envp[size]
+				&& (i + size) < len && needle[i + size] != '\0')
+					size++;
+			if (size == (size_t)ft_strlen(envp))
+				return (&envp[i]);
+		}
+		size = 0;
+		i++;
+	}
+	return (NULL);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
