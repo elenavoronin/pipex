@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/20 17:58:52 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/20 18:21:53 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,52 +17,36 @@
 #include <sys/wait.h>
 #include <sys/errno.h>
 #include <fcntl.h>
+#include <stdlib.h>
 // #include "ft_printf.h"
 
-
-char	**find_paths(char **envp, char *needle, size_t len)
+char	*get_path(char **cmd, char **envp)
 {
 	char	*path;
 	char	**new_paths;
 	int		i;
 
 	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], needle, len))
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	path = ft_substr(envp[i], i - 2, ft_strlen(envp[i]) - 5);
 	new_paths = ft_split(path, ':');
-	return (new_paths);
-}
-
-char	**get_cmd(char *str)
-{
-	char	**cmd;
-
-	cmd = ft_split(str, ' ');
-	return (cmd);
-}
-
-char	**get_path(char *cmd, char **envp)
-{
-	char	**new_paths;
-	int		i;
-
 	i = 0;
 	while (new_paths[i] != NULL)
 	{	
-		if (access(ft_strjoin(find_paths(envp[i], "PATH=", 5), cmd)) == 0)
-			return (new_paths[i]);
+		if (access(ft_strjoin(new_paths[i], cmd[0]), R_OK | W_OK | X_OK) == 0)
+			return (ft_strjoin(new_paths[i], cmd[0]));
 		i++;
 	}
 	return (NULL);
 }
 
-void	*first_child(int argc, char **argv, char **envp, int fd[])
+void	*first_child(char **argv, char **envp, int fd[])
 {
 	int		input;
 	char	**cmd;
 
-	cmd = get_cmd(argv[2]);
+	cmd = ft_split(argv[2], ' ');
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (dup2(input, STDIN_FILENO) == -1)
@@ -71,16 +55,16 @@ void	*first_child(int argc, char **argv, char **envp, int fd[])
 		return (NULL);
 	close(fd[1]);
 	close(input);
-	execve(get_path(cmd[0], envp), cmd, envp);
+	execve(get_path(cmd, envp), cmd, envp);
 	return (NULL);
 }
 
-void	*second_child(int argc, char **argv, char **envp, int fd[])
+void	*second_child(char **argv, char **envp, int fd[])
 {
-	int	output;
+	int		output;
 	char	**cmd;
 
-	cmd = get_cmd(argv[3]);
+	cmd = ft_split(argv[2], ' ');
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (dup2(output, STDOUT_FILENO) == -1)
@@ -89,8 +73,8 @@ void	*second_child(int argc, char **argv, char **envp, int fd[])
 		return (NULL);
 	close(fd[0]);
 	close(output);
-	execve(get_path(cmd[0], envp), cmd, envp);
-	return(NULL);
+	execve(get_path(cmd, envp), cmd, envp);
+	return (NULL);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -102,29 +86,29 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 5)
 	{	
 		printf("Not enough arguments");
-		return (0);
+		exit(0);
 	}
 	if (pipe(fd) == -1)
 	{
 		perror("ERROR");
-		return (0);
+		exit(0);
 	}
 	pid1 = fork();
 	if (pid1 == -1)
 	{
 		perror("ERROR");
-		return (0);
+		exit(0);
 	}
 	if (pid1 == 0)
-		first_child(argc, argv, envp, fd);
+		first_child(argv, envp, fd);
 	pid2 = fork();
 	if (pid2 == -1)
 	{
 		perror("ERROR");
-		return (0);
+		exit(0);
 	}
 	if (pid2 == 0)
-		second_child(argc, argv, envp, fd);
+		second_child(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
