@@ -6,34 +6,69 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/02/20 17:09:48 by evoronin      ########   odam.nl          #
+#    Updated: 2023/02/21 14:44:37 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = pipex
+# NAME = pipex
+# SRCS =	pipex.c
+# LIBFT = libft/libft.a
+# CC = gcc
+# FLAGS = -Wall -Wextra -Werror
 
-SRCS =	pipex.c
+# all: $(NAME)
 
-OBJS = $(SRCS:.c=.o)
+# $(NAME): $(SRCS)
+# 	@make -C libft
+# 	@$(CC) $(FLAGS) $(SRCS) $(LIBFT) -I ../pipex -o $(NAME)
 
-LIBFT = libft/libft.a
+# clean:s
+# 	@rm -f $(OBJS)
+
+# fclean: clean
+# 	@rm -f $(NAME)
+
+# re: fclean all
+
+# .PHONY: fclean clean re all  #bonus when bonus
+
+
+RED=\033[1;31m
+GREEN=\033[1;32m
+YELLOW=\033[1;33m
+BLUE=\033[1;34m
+MAGENTA=\033[1;35m
+CYAN=\033[1;36m
+END=\033[0m
 
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
-CFLAGS = -I libft
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+NAME = pipex
+SRCS = pipex.c
+LIBFT = libft/libft.a
+DIR_I = ../pipex
 
-all: $(NAME)
+${NAME}: ${SRCS}
+	@make -s -C libft
+	@echo "${BLUE}Compiling ${NAME}${END}"
+	@${CC} ${CFLAGS} ${SRCS} ${LIBFT} -I ${DIR_I} -o ${NAME}
+	@echo "${GREEN}Done!${END}"
 
-$(NAME): $(SRCS)
-	make -C libft
-	@$(CC) $(FLAGS) $(CFLAGS) $(LIBFT) $< -o $(NAME)
+all: ${NAME}
 
 clean:
-	rm -f $(OBJS)
+	@make clean -C libft
+	@echo "${RED}Removing in/outfile${END}"
+	@rm -rf test
+	@rm -rf output.txt
+	@echo "${GREEN}Done!${END}"
 
 fclean: clean
-	rm -f $(NAME)
+	@make fclean -C libft
+	@echo "${RED}Removing ${NAME}${END}"
+	@rm -rf ${NAME}
+	@echo "${GREEN}Done!${END}"
 
 re: fclean all
 
-.PHONY: fclean clean re all  #bonus when bonus
+.PHONY: all clean fclean re

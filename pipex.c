@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/20 18:21:53 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/21 14:48:03 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,35 @@
 #include <stdlib.h>
 // #include "ft_printf.h"
 
+void	ft_error(char *str, int error)
+{
+	error = errno;
+	perror(str);
+	exit(error);
+}
+
 char	*get_path(char **cmd, char **envp)
 {
-	char	*path;
 	char	**new_paths;
+	char	*path;
 	int		i;
+	char	*cmd_path;
 
 	i = 0;
+	cmd_path = NULL;
+	path = NULL;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
-	path = ft_substr(envp[i], i - 2, ft_strlen(envp[i]) - 5);
-	new_paths = ft_split(path, ':');
+	new_paths = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (new_paths[i] != NULL)
-	{	
-		if (access(ft_strjoin(new_paths[i], cmd[0]), R_OK | W_OK | X_OK) == 0)
-			return (ft_strjoin(new_paths[i], cmd[0]));
+	while (new_paths[i] != '\0')
+	{
+		path = ft_strjoin(new_paths[i], "/");
+		cmd_path = ft_strjoin(path, cmd[0]);
+		if (cmd_path == 0)
+			ft_error("Strjoin error", errno);
+		if (access(cmd_path, F_OK) == 0)
+			return (cmd_path);
 		i++;
 	}
 	return (NULL);
@@ -50,9 +63,9 @@ void	*first_child(char **argv, char **envp, int fd[])
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (dup2(input, STDIN_FILENO) == -1)
-		return (NULL);
+		ft_error("dup2", errno);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
-		return (NULL);
+		ft_error("dup2", errno);
 	close(fd[1]);
 	close(input);
 	execve(get_path(cmd, envp), cmd, envp);
@@ -64,13 +77,13 @@ void	*second_child(char **argv, char **envp, int fd[])
 	int		output;
 	char	**cmd;
 
-	cmd = ft_split(argv[2], ' ');
+	cmd = ft_split(argv[3], ' ');
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (dup2(output, STDOUT_FILENO) == -1)
-		return (NULL);
+		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
-		return (NULL);
+		ft_error("dup2", errno);
 	close(fd[0]);
 	close(output);
 	execve(get_path(cmd, envp), cmd, envp);
@@ -84,29 +97,17 @@ int	main(int argc, char **argv, char **envp)
 	int	pid2;
 
 	if (argc != 5)
-	{	
-		printf("Not enough arguments");
-		exit(0);
-	}
+		ft_error("Not enough arguments", 0);
 	if (pipe(fd) == -1)
-	{
-		perror("ERROR");
-		exit(0);
-	}
+		ft_error("pipe", errno);
 	pid1 = fork();
 	if (pid1 == -1)
-	{
-		perror("ERROR");
-		exit(0);
-	}
+		ft_error("fork 1", errno);
 	if (pid1 == 0)
 		first_child(argv, envp, fd);
 	pid2 = fork();
 	if (pid2 == -1)
-	{
-		perror("ERROR");
-		exit(0);
-	}
+		ft_error("fork 2", errno);
 	if (pid2 == 0)
 		second_child(argv, envp, fd);
 	close(fd[0]);
@@ -115,17 +116,3 @@ int	main(int argc, char **argv, char **envp)
 	waitpid(pid2, NULL, 0);
 	return (0);
 }
-
-// int	main(int argc, char **argv, char **envp)
-// {
-// 	char	**path;
-// 	int i = 0;
-
-// 	path = ft_split(find_path(envp, "PATH=", 5), ':');
-// 	while (path[i] != '\0')
-// 	{
-// 		printf("%s\n", path[i]);
-// 		i++;
-// 	}
-// 	return (0);
-// }
