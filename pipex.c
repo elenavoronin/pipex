@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/21 14:48:03 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/24 11:15:40 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	*first_child(char **argv, char **envp, int fd[])
 	int		input;
 	char	**cmd;
 
-	cmd = ft_split(argv[2], ' ');
+	cmd = split_cmd(argv[2], ' ');
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (dup2(input, STDIN_FILENO) == -1)
@@ -77,7 +77,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 	int		output;
 	char	**cmd;
 
-	cmd = ft_split(argv[3], ' ');
+	cmd = split_cmd(argv[3], ' ');
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (dup2(output, STDOUT_FILENO) == -1)
@@ -97,7 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	int	pid2;
 
 	if (argc != 5)
-		ft_error("Not enough arguments", 0);
+		ft_error("Not enough arguments", 127);
 	if (pipe(fd) == -1)
 		ft_error("pipe", errno);
 	pid1 = fork();

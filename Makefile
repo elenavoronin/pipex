@@ -6,7 +6,7 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/02/21 14:44:37 by evoronin      ########   odam.nl          #
+#    Updated: 2023/02/22 11:22:02 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,7 +60,7 @@ clean:
 	@make clean -C libft
 	@echo "${RED}Removing in/outfile${END}"
 	@rm -rf test
-	@rm -rf output.txt
+	@rm -rf output
 	@echo "${GREEN}Done!${END}"
 
 fclean: clean
