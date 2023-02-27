@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/24 11:15:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/02/27 17:10:40 by mraasvel      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include "libft/libft.h"
 // #include "ft_printf.h"
 
 void	ft_error(char *str, int error)
@@ -41,7 +42,7 @@ char	*get_path(char **cmd, char **envp)
 		i++;
 	new_paths = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (new_paths[i] != '\0')
+	while (*new_paths[i] != '\0')
 	{
 		path = ft_strjoin(new_paths[i], "/");
 		cmd_path = ft_strjoin(path, cmd[0]);
@@ -79,7 +80,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[3], ' ');
 	close(fd[1]);
-	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 00700); //change back to 0644
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)

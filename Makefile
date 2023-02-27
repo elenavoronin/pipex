@@ -6,7 +6,7 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/02/22 11:22:02 by evoronin      ########   odam.nl          #
+#    Updated: 2023/02/27 17:18:54 by mraasvel      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,12 +44,14 @@ END=\033[0m
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 NAME = pipex
-SRCS = pipex.c
+SRCS = pipex.c\
+		split_cmd.c\
+		
 LIBFT = libft/libft.a
 DIR_I = ../pipex
 
 ${NAME}: ${SRCS}
-	@make -s -C libft
+	@make -s -C
 	@echo "${BLUE}Compiling ${NAME}${END}"
 	@${CC} ${CFLAGS} ${SRCS} ${LIBFT} -I ${DIR_I} -o ${NAME}
 	@echo "${GREEN}Done!${END}"
