@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/02/27 17:10:40 by mraasvel      ########   odam.nl         */
+/*   Updated: 2023/03/13 18:50:42 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include "libft/libft.h"
-// #include "ft_printf.h"
 
 void	ft_error(char *str, int error)
 {
@@ -42,7 +41,7 @@ char	*get_path(char **cmd, char **envp)
 		i++;
 	new_paths = ft_split(envp[i] + 5, ':');
 	i = 0;
-	while (*new_paths[i] != '\0')
+	while (new_paths[i] != '\0')
 	{
 		path = ft_strjoin(new_paths[i], "/");
 		cmd_path = ft_strjoin(path, cmd[0]);
@@ -52,6 +51,8 @@ char	*get_path(char **cmd, char **envp)
 			return (cmd_path);
 		i++;
 	}
+	ft_putstr_fd(cmd_path, 2);
+	ft_putchar_fd('\n', 2);
 	return (NULL);
 }
 
@@ -69,7 +70,8 @@ void	*first_child(char **argv, char **envp, int fd[])
 		ft_error("dup2", errno);
 	close(fd[1]);
 	close(input);
-	execve(get_path(cmd, envp), cmd, envp);
+	if (execve(get_path(cmd, envp), cmd, envp) == -1)
+		ft_error("execve child 1", errno);
 	return (NULL);
 }
 
@@ -80,14 +82,15 @@ void	*second_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[3], ' ');
 	close(fd[1]);
-	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 00700); //change back to 0644
+	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 00644);
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
 		ft_error("dup2", errno);
 	close(fd[0]);
 	close(output);
-	execve(get_path(cmd, envp), cmd, envp);
+	if (execve(get_path(cmd, envp), cmd, envp) == -1)
+		ft_error("execve child 2", errno);
 	return (NULL);
 }
 
@@ -98,7 +101,7 @@ int	main(int argc, char **argv, char **envp)
 	int	pid2;
 
 	if (argc != 5)
-		ft_error("Not enough arguments", 127);
+		ft_error("Wrong number of args", errno);
 	if (pipe(fd) == -1)
 		ft_error("pipe", errno);
 	pid1 = fork();

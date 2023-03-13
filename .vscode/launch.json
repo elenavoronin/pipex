@@ -9,7 +9,7 @@
 			"request": "launch",
 			"name": "Debug",
 			"program": "/Users/evoronin/Documents/pipex/a.out",
-			"args": [],
+			"args": [input "grep 'Hello'" "wc -l" output],
 			"cwd": "${workspaceFolder}"
 		}
 	]

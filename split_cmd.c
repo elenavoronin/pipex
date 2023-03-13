@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   split_cmd.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2023/03/13 14:31:19 by evoronin      #+#    #+#                 */
+/*   Updated: 2023/03/13 18:53:58 by evoronin      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "libft/libft.h"
@@ -14,7 +26,7 @@ static void	ft_free(char **arr, int j)
 	free (arr);
 }
 
-static int	check_length(const char *s, char c, int i)
+static int	check_length(const char *s, int i)
 {
 	int	len;
 
@@ -25,17 +37,19 @@ static int	check_length(const char *s, char c, int i)
 		len++;
 		i++;
 	}
+	if (s[i] == 39)
+		len++;
 	return (len);
 }
 
-static int	check_comma(const char *s, char c, int i)
+static int	check_comma(const char *s, int i)
 {
 	while (s[i] && s[i] != 39)
 	{
 		i++;
 	}
-	if (s[i] == c)
-		i++;
+	// if (s[i] == 39)
+	// 	i++;
 	return (i);
 }
 
@@ -60,13 +74,13 @@ static int	ft_countwords(const char *s, char c)
 	int		count;
 
 	i = 0;
-	count = 0;
+	count = 1;
 	if (s[i] == '\0')
 		return (0);
 	while (s[i] != '\0')
 	{
 		if (s[i] == 39)
-			i = check_comma(s, 39, i + 2);
+			i = check_comma(s, i + 2);
 		if ((s[i + 1] != '\0' && s[i] == c && s[i + 1] != c))
 			count++;
 		i++;
@@ -80,7 +94,6 @@ char	**split_cmd(char const *s, char c)
 	int		i;
 	int		j;
 
-
 	j = 0;
 	i = 0;
 	arr = (char **)malloc((ft_countwords(s, c) + 1) * sizeof(char *));
@@ -93,18 +106,14 @@ char	**split_cmd(char const *s, char c)
 					i++;
 			if (s[i] == 39)
 			{
-				arr[j] = ft_substr(s, i, check_length(s, c, i));
-				i = i + check_length(s, c, i) + 1;
+				arr[j] = ft_substr(s, i, check_length(s, i));
+				i = i + check_length(s, i) + 1;
 			}
 			else
 				arr[j] = ft_substr(s, i, ft_wordlen(s, c, i));
 			if (!arr[j])
-			{
-				ft_free(arr, j);
-				return (NULL);
-			}
+				return (ft_free(arr, j), NULL);
 			i = i + ft_wordlen(s, c, i);
-			printf("[3]i is: %d\n", i);
 		}
 		j++;
 	}
@@ -117,7 +126,7 @@ char	**split_cmd(char const *s, char c)
 // 	int i;
 // 	char **split;
 // 	i = 0;
-// 	split = split_cmd("awk '{ print }'", 32);
+// 	split = split_cmd("awk '($3 == "") {count++ } END { print count }'", ' ');
 // 	while(split[i] != NULL)
 // 	{
 // 		printf("[%d]: %s\n", i, split[i]);

@@ -6,12 +6,14 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/02/27 17:18:54 by mraasvel      ########   odam.nl          #
+#    Updated: 2023/03/13 13:11:29 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 # NAME = pipex
-# SRCS =	pipex.c
+# SRCS =	pipex.c\
+# 		split_cmd.c\
+		
 # LIBFT = libft/libft.a
 # CC = gcc
 # FLAGS = -Wall -Wextra -Werror
@@ -22,7 +24,7 @@
 # 	@make -C libft
 # 	@$(CC) $(FLAGS) $(SRCS) $(LIBFT) -I ../pipex -o $(NAME)
 
-# clean:s
+# clean:
 # 	@rm -f $(OBJS)
 
 # fclean: clean
@@ -42,7 +44,7 @@ CYAN=\033[1;36m
 END=\033[0m
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g
 NAME = pipex
 SRCS = pipex.c\
 		split_cmd.c\
@@ -51,7 +53,7 @@ LIBFT = libft/libft.a
 DIR_I = ../pipex
 
 ${NAME}: ${SRCS}
-	@make -s -C
+	@make -s -C ./libft
 	@echo "${BLUE}Compiling ${NAME}${END}"
 	@${CC} ${CFLAGS} ${SRCS} ${LIBFT} -I ${DIR_I} -o ${NAME}
 	@echo "${GREEN}Done!${END}"
