@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/13 14:31:19 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/13 18:53:58 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/03/14 12:08:17 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ char	**split_cmd(char const *s, char c)
 					i++;
 			if (s[i] == 39)
 			{
-				arr[j] = ft_substr(s, i, check_length(s, i));
+				arr[j] = ft_substr(s, i + 1, check_length(s, i) - 2);
 				i = i + check_length(s, i) + 1;
 			}
 			else
@@ -126,7 +126,7 @@ char	**split_cmd(char const *s, char c)
 // 	int i;
 // 	char **split;
 // 	i = 0;
-// 	split = split_cmd("awk '($3 == "") {count++ } END { print count }'", ' ');
+// 	split = split_cmd("awk '{print $1}'", ' ');
 // 	while(split[i] != NULL)
 // 	{
 // 		printf("[%d]: %s\n", i, split[i]);
