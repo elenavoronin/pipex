@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:12:46 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/13 14:31:09 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/03/14 17:40:36 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,12 @@
 # include <fcntl.h>
 # include "libft/libft.h"
 
-char	*get_path(char **cmd, char **envp);
-void	ft_error(char *str, int error);
-void	*first_child(char **argv, char **envp, int fd[]);
-void	*second_child(char **argv, char **envp, int fd[]);
-char	**split_cmd(char const *s, char c);
+char			*get_path(char **cmd, char **envp);
+void			ft_error(char *str, int error);
+void			*first_child(char **argv, char **envp, int fd[]);
+void			*second_child(char **argv, char **envp, int fd[]);
+char			**split_cmd(char const *s, char c);
+void			ft_free(char **arr, int j);
+int				check_length(const char *s, int i);
 
 #endif

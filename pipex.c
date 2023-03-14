@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/13 18:50:42 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/03/14 18:16:26 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*get_path(char **cmd, char **envp)
 	}
 	ft_putstr_fd(cmd_path, 2);
 	ft_putchar_fd('\n', 2);
-	return (NULL);
+	return (ft_error("Command not found", 127), NULL);
 }
 
 void	*first_child(char **argv, char **envp, int fd[])
@@ -99,6 +99,7 @@ int	main(int argc, char **argv, char **envp)
 	int	fd[2];
 	int	pid1;
 	int	pid2;
+	int	status;
 
 	if (argc != 5)
 		ft_error("Wrong number of args", errno);
@@ -116,7 +117,8 @@ int	main(int argc, char **argv, char **envp)
 		second_child(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid2, &status, 0);
+	if (WIFEXITED(status) == 1)
+		exit(WEXITSTATUS(status));
 	return (0);
 }

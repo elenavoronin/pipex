@@ -6,7 +6,7 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/03/13 13:11:29 by evoronin      ########   odam.nl          #
+#    Updated: 2023/03/14 17:38:07 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,6 +48,7 @@ CFLAGS = -Wall -Wextra -Werror -g
 NAME = pipex
 SRCS = pipex.c\
 		split_cmd.c\
+		pipex_utils.c\
 		
 LIBFT = libft/libft.a
 DIR_I = ../pipex

@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/13 14:31:19 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/14 12:08:17 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/03/14 18:00:47 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,12 @@
 #include "libft/libft.h"
 #include "pipex.h"
 
-// free memory
-static void	ft_free(char **arr, int j)
-{
-	while (j >= 0)
-	{
-		free(arr[j]);
-		j--;
-	}
-	free (arr);
-}
-
-static int	check_length(const char *s, int i)
-{
-	int	len;
-
-	len = 1;
-	i++;
-	while (s[i] && s[i] != 39)
-	{
-		len++;
-		i++;
-	}
-	if (s[i] == 39)
-		len++;
-	return (len);
-}
-
 static int	check_comma(const char *s, int i)
 {
-	while (s[i] && s[i] != 39)
+	while (s[i] && (s[i] != 39 || s[i] != 34))
 	{
 		i++;
 	}
-	// if (s[i] == 39)
-	// 	i++;
 	return (i);
 }
 
@@ -79,7 +50,7 @@ static int	ft_countwords(const char *s, char c)
 		return (0);
 	while (s[i] != '\0')
 	{
-		if (s[i] == 39)
+		if (s[i] == 39 || s[i] == 34)
 			i = check_comma(s, i + 2);
 		if ((s[i + 1] != '\0' && s[i] == c && s[i + 1] != c))
 			count++;
@@ -88,23 +59,17 @@ static int	ft_countwords(const char *s, char c)
 	return (count);
 }
 
-char	**split_cmd(char const *s, char c)
+char	**make_arr(char const *s, char c, char **arr, int j)
 {
-	char	**arr;
-	int		i;
-	int		j;
+	int	i;
 
-	j = 0;
 	i = 0;
-	arr = (char **)malloc((ft_countwords(s, c) + 1) * sizeof(char *));
-	if (!arr)
-		return (NULL);
 	while (j < ft_countwords(s, c))
 	{
 		{
 			while (s[i] == c)
 					i++;
-			if (s[i] == 39)
+			if (s[i] == 39 || s[i] == 34)
 			{
 				arr[j] = ft_substr(s, i + 1, check_length(s, i) - 2);
 				i = i + check_length(s, i) + 1;
@@ -118,6 +83,21 @@ char	**split_cmd(char const *s, char c)
 		j++;
 	}
 	arr[j] = 0;
+	return (arr);
+}
+
+char	**split_cmd(char const *s, char c)
+{
+	char	**arr;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	arr = (char **)malloc((ft_countwords(s, c) + 1) * sizeof(char *));
+	if (!arr)
+		return (NULL);
+	arr = make_arr(s, c, arr, j);
 	return (arr);
 }
 
