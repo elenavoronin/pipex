@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/15 10:46:02 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/03/15 17:28:04 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 #include <stdlib.h>
 #include "libft/libft.h"
 
-void	ft_error(char *str, int error)
+void	*protect(void *ptr)
 {
-	error = errno;
-	perror(str);
-	exit(error);
+	if (ptr == NULL)
+		exit(errno);
+	return (ptr);
 }
 
 char	*get_path(char **cmd, char **envp)
@@ -40,20 +40,19 @@ char	*get_path(char **cmd, char **envp)
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	new_paths = ft_split(envp[i] + 5, ':');
+	if (!new_paths)
+		ft_error("Path", errno);
 	i = 0;
 	while (new_paths[i] != '\0')
 	{
-		path = ft_strjoin(new_paths[i], "/");
+		path = protect(ft_strjoin(new_paths[i], "/"));
 		cmd_path = ft_strjoin(path, cmd[0]);
-		if (cmd_path == 0)
-			ft_error("Strjoin error", errno);
-		if (access(cmd_path, F_OK) == 0)
+		if (access(cmd_path, X_OK) == 0)
 			return (cmd_path);
 		i++;
 	}
-	ft_putstr_fd(cmd_path, 2);
-	ft_putchar_fd('\n', 2);
-	return (ft_error("Command not found", 127), NULL);
+	ft_error("Command not found", 127);
+	return (NULL);
 }
 
 void	*first_child(char **argv, char **envp, int fd[])
@@ -62,6 +61,8 @@ void	*first_child(char **argv, char **envp, int fd[])
 	char	**cmd;
 
 	cmd = split_cmd(argv[2], ' ');
+	if (!cmd)
+		ft_error("Command not found", errno);
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (dup2(input, STDIN_FILENO) == -1)
@@ -81,8 +82,10 @@ void	*second_child(char **argv, char **envp, int fd[])
 	char	**cmd;
 
 	cmd = split_cmd(argv[3], ' ');
+	if (!cmd)
+		ft_error("Command not found", errno);
 	close(fd[1]);
-	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 00644);
+	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
