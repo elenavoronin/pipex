@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/15 17:28:04 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/21 14:10:40 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_path(char **cmd, char **envp)
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	new_paths = ft_split(envp[i] + 5, ':');
-	if (!new_paths)
+	if (!*new_paths)
 		ft_error("Path", errno);
 	i = 0;
 	while (new_paths[i] != '\0')
@@ -65,6 +65,8 @@ void	*first_child(char **argv, char **envp, int fd[])
 		ft_error("Command not found", errno);
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
+	if (!input)
+		ft_error("file", errno);
 	if (dup2(input, STDIN_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
@@ -86,6 +88,8 @@ void	*second_child(char **argv, char **envp, int fd[])
 		ft_error("Command not found", errno);
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (!output)
+		ft_error("file", errno);
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
