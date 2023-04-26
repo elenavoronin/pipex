@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/14 17:37:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/16 12:17:13 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/26 17:02:45 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@
 
 void	ft_error(char *str, int error)
 {
-	error = errno;
 	perror(str);
-	exit(error);
+	if (error == 0)
+		exit(0);
+	else
+		exit(error);
 }
 
 // free memory for split_cmd

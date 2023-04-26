@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/04/21 14:10:40 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/26 17:12:41 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ void	*first_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[2], ' ');
 	if (!cmd)
-		ft_error("Command not found", errno);
+		ft_error("Command not found", 127);
+	printf("HERE?\n");
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
-	if (!input)
+	if (input == -1)
 		ft_error("file", errno);
 	if (dup2(input, STDIN_FILENO) == -1)
 		ft_error("dup2", errno);
@@ -84,10 +85,11 @@ void	*second_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[3], ' ');
 	if (!cmd)
-		ft_error("Command not found", errno);
+		ft_error("Command not found", 127);
+	printf("OR HERE?\n");
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (!output)
+	if (output == -1)
 		ft_error("file", errno);
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
@@ -112,19 +114,20 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe(fd) == -1)
 		ft_error("pipe", errno);
 	pid1 = fork();
-	pid2 = fork();
-	if (pid1 == -1 || pid2 == -1)
-		ft_error("fork", errno);
+	if (pid1 == -1)
+		ft_error("fork1", errno);
 	if (pid1 == 0)
 		first_child(argv, envp, fd);
+	pid2 = fork();
+	if (pid2 == -1)
+		ft_error("fork2", errno);
 	if (pid2 == 0)
 		second_child(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
-	while (waitpid(-1, &status, 0) > 0)
+	while (waitpid(-1, &status, 0) == -1)
 	{
-		if (WIFEXITED(status) == 1)
+		if (WEXITSTATUS(status))
 			exit(WEXITSTATUS(status));
 	}
-	return (0);
 }
