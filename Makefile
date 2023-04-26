@@ -10,31 +10,6 @@
 #                                                                              #
 # **************************************************************************** #
 
-# NAME = pipex
-# SRCS =	pipex.c\
-# 		split_cmd.c\
-		
-# LIBFT = libft/libft.a
-# CC = gcc
-# FLAGS = -Wall -Wextra -Werror
-
-# all: $(NAME)
-
-# $(NAME): $(SRCS)
-# 	@make -C libft
-# 	@$(CC) $(FLAGS) $(SRCS) $(LIBFT) -I ../pipex -o $(NAME)
-
-# clean:
-# 	@rm -f $(OBJS)
-
-# fclean: clean
-# 	@rm -f $(NAME)
-
-# re: fclean all
-
-# .PHONY: fclean clean re all  #bonus when bonus
-
-
 RED=\033[1;31m
 GREEN=\033[1;32m
 YELLOW=\033[1;33m

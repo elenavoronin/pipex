@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// "../../usr/bin"
 #include "pipex.h"
 #include <stdio.h>
 #include <unistd.h>
@@ -43,7 +42,7 @@ char	*get_path(char **cmd, char **envp)
 	if (!*new_paths)
 		ft_error("Path", errno);
 	i = 0;
-	while (new_paths[i] != '\0')
+	while (new_paths[i] != NULL)
 	{
 		path = protect(ft_strjoin(new_paths[i], "/"));
 		cmd_path = ft_strjoin(path, cmd[0]);
@@ -113,19 +112,19 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe(fd) == -1)
 		ft_error("pipe", errno);
 	pid1 = fork();
-	if (pid1 == -1)
-		ft_error("fork 1", errno);
+	pid2 = fork();
+	if (pid1 == -1 || pid2 == -1)
+		ft_error("fork", errno);
 	if (pid1 == 0)
 		first_child(argv, envp, fd);
-	pid2 = fork();
-	if (pid2 == -1)
-		ft_error("fork 2", errno);
 	if (pid2 == 0)
 		second_child(argv, envp, fd);
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid2, &status, 0);
-	if (WIFEXITED(status) == 1)
-		exit(WEXITSTATUS(status));
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WIFEXITED(status) == 1)
+			exit(WEXITSTATUS(status));
+	}
 	return (0);
 }
