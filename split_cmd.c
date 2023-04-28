@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/13 14:31:19 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/14 18:00:47 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/28 16:39:08 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 static int	check_comma(const char *s, int i)
 {
-	while (s[i] && (s[i] != 39 )) //|| s[i] != 34
+	while (s[i] && (s[i] != 39 || s[i] != 34))
 	{
 		i++;
 	}
@@ -106,7 +106,7 @@ char	**split_cmd(char const *s, char c)
 // 	int i;
 // 	char **split;
 // 	i = 0;
-// 	split = split_cmd("awk '{print $1}'", ' ');
+// 	split = split_cmd("/usr/cat", ' ');
 // 	while(split[i] != NULL)
 // 	{
 // 		printf("[%d]: %s\n", i, split[i]);

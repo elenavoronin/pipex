@@ -6,7 +6,7 @@
 #    By: evoronin <evoronin@student.codam.nl>         +#+                      #
 #                                                    +#+                       #
 #    Created: 2023/02/03 11:47:21 by evoronin      #+#    #+#                  #
-#    Updated: 2023/03/30 11:48:39 by evoronin      ########   odam.nl          #
+#    Updated: 2023/04/28 17:56:43 by evoronin      ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ END=\033[0m
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
+CFLAGS += -fsanitize=address
 NAME = pipex
 SRCS = pipex.c\
 		split_cmd.c\

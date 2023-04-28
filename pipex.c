@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/04/26 17:12:41 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/28 18:18:15 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,21 @@ char	*get_path(char **cmd, char **envp)
 	int		i;
 	char	*cmd_path;
 
+	if (ft_strrchr(cmd[0], '/') != NULL && access(cmd[0], X_OK) == 0)
+		return (cmd[0]);
 	i = 0;
-	cmd_path = NULL;
-	path = NULL;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	new_paths = ft_split(envp[i] + 5, ':');
+	new_paths = get_new_path(cmd, envp);
 	if (!*new_paths)
-		ft_error("Path", errno);
-	i = 0;
+		ft_error(cmd[0], 127);
 	while (new_paths[i] != NULL)
 	{
 		path = protect(ft_strjoin(new_paths[i], "/"));
 		cmd_path = ft_strjoin(path, cmd[0]);
-		if (access(cmd_path, X_OK) == 0)
+		if (access(cmd_path, F_OK) == 0)
 			return (cmd_path);
 		i++;
 	}
-	ft_error("Command not found", 127);
+	ft_error(cmd[0], 127);
 	return (NULL);
 }
 
@@ -61,7 +58,7 @@ void	*first_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[2], ' ');
 	if (!cmd)
-		ft_error("Command not found", 127);
+		ft_error(argv[2], 127);
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
@@ -84,8 +81,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 
 	cmd = split_cmd(argv[3], ' ');
 	if (!cmd)
-		ft_error("Command not found", 127);
-	close(fd[1]);
+		ft_error(argv[3], 127);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)
 		ft_error("file", errno);
@@ -93,6 +89,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
 		ft_error("dup2", errno);
+	close(fd[1]);
 	close(fd[0]);
 	close(output);
 	if (execve(get_path(cmd, envp), cmd, envp) == -1)
@@ -112,15 +109,13 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe(fd) == -1)
 		ft_error("pipe", errno);
 	pid1 = fork();
-	if (pid1 == -1)
-		ft_error("fork1", errno);
 	if (pid1 == 0)
 		first_child(argv, envp, fd);
 	pid2 = fork();
-	if (pid2 == -1)
-		ft_error("fork2", errno);
 	if (pid2 == 0)
 		second_child(argv, envp, fd);
+	if (pid1 == -1 || pid2 == -1)
+		ft_error("fork1", errno);
 	close(fd[0]);
 	close(fd[1]);
 	while (waitpid(-1, &status, 0) == -1)

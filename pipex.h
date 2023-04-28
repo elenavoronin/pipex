@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:12:46 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/03/14 17:40:36 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/04/28 18:15:29 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ void			*second_child(char **argv, char **envp, int fd[]);
 char			**split_cmd(char const *s, char c);
 void			ft_free(char **arr, int j);
 int				check_length(const char *s, int i);
+char			**get_new_path(char **cmd, char **envp);
 
 #endif
