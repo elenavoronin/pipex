@@ -17,7 +17,7 @@
 
 static int	check_comma(const char *s, int i)
 {
-	while (s[i] && (s[i] != 39 || s[i] != 34))
+	while (s[i] && (s[i] != 39 )) //|| s[i] != 34
 	{
 		i++;
 	}

@@ -62,7 +62,6 @@ void	*first_child(char **argv, char **envp, int fd[])
 	cmd = split_cmd(argv[2], ' ');
 	if (!cmd)
 		ft_error("Command not found", 127);
-	printf("HERE?\n");
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
@@ -86,7 +85,6 @@ void	*second_child(char **argv, char **envp, int fd[])
 	cmd = split_cmd(argv[3], ' ');
 	if (!cmd)
 		ft_error("Command not found", 127);
-	printf("OR HERE?\n");
 	close(fd[1]);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)

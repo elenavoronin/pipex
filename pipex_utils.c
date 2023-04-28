@@ -24,6 +24,11 @@ void	ft_error(char *str, int error)
 	perror(str);
 	if (error == 0)
 		exit(0);
+	if (error == 127)
+	{
+		ft_putstr_fd("Command not found", 2);
+		exit(127);
+	}
 	else
 		exit(error);
 }
@@ -45,7 +50,7 @@ int	check_length(const char *s, int i)
 
 	len = 1;
 	i++;
-	while (s[i] && (s[i] != 39 || s[i] != 34))
+	while (s[i] && (s[i] != 39)) //  || s[i] != 34)
 	{
 		len++;
 		i++;
