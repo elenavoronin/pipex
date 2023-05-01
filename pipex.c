@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/04/28 18:18:15 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/05/01 13:25:59 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	*first_child(char **argv, char **envp, int fd[])
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
-		ft_error("file", errno);
+		ft_error("file not found", errno);
 	if (dup2(input, STDIN_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
@@ -84,7 +84,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 		ft_error(argv[3], 127);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)
-		ft_error("file", errno);
+		ft_error("file not found", errno);
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
