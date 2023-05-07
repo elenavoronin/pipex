@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/05/01 13:25:59 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/05/07 14:40:49 by mbp14         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ char	*get_path(char **cmd, char **envp)
 	if (ft_strrchr(cmd[0], '/') != NULL && access(cmd[0], X_OK) == 0)
 		return (cmd[0]);
 	i = 0;
-	new_paths = get_new_path(cmd, envp);
-	if (!*new_paths)
-		ft_error(cmd[0], 127);
+	new_paths = protect(get_new_path(cmd, envp));
 	while (new_paths[i] != NULL)
 	{
 		path = protect(ft_strjoin(new_paths[i], "/"));

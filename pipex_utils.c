@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/03/14 17:37:05 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/04/28 18:18:32 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/05/07 14:40:34 by mbp14         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,6 @@ char	**get_new_path(char **cmd, char **envp)
 		i++;
 	if (!envp[i])
 		ft_error(cmd[0], 127);
-	new_paths = ft_split(envp[i] + 5, ':');
+	new_paths = protect(ft_split(envp[i] + 5, ':'));
 	return (new_paths);
 }
