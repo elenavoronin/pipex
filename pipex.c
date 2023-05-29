@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/05/08 13:31:11 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/05/29 15:38:06 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ void	*first_child(char **argv, char **envp, int fd[])
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
-		ft_error("file error", errno);
+		perror("infile");
 	if (dup2(input, STDIN_FILENO) == -1)
-		ft_error("dup2", errno);
+		ft_error("dup2 first child", errno);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
-		ft_error("dup2", errno);
+		ft_error("dup2 first child", errno);
 	close(fd[1]);
 	close(input);
 	if (execve(get_path(cmd, envp), cmd, envp) == -1)
@@ -82,11 +82,11 @@ void	*second_child(char **argv, char **envp, int fd[])
 		ft_error(argv[3], 127);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)
-		ft_error("file error", errno);
+		perror("outfile");
 	if (dup2(output, STDOUT_FILENO) == -1)
-		ft_error("dup2", errno);
+		ft_error("dup2 second child", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
-		ft_error("dup2", errno);
+		ft_error("dup2 second child", errno);
 	close(fd[1]);
 	close(fd[0]);
 	close(output);
