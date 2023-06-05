@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/05/29 15:38:06 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/06/03 14:12:52 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*get_path(char **cmd, char **envp)
 	while (new_paths[i] != NULL)
 	{
 		path = protect(ft_strjoin(new_paths[i], "/"));
-		cmd_path = ft_strjoin(path, cmd[0]);
+		cmd_path = protect(ft_strjoin(path, cmd[0]));
 		if (access(cmd_path, F_OK) == 0)
 			return (cmd_path);
 		i++;
@@ -60,7 +60,10 @@ void	*first_child(char **argv, char **envp, int fd[])
 	close(fd[0]);
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
+	{
 		perror("infile");
+		exit(1);
+	}
 	if (dup2(input, STDIN_FILENO) == -1)
 		ft_error("dup2 first child", errno);
 	if (dup2(fd[1], STDOUT_FILENO) == -1)
@@ -82,7 +85,10 @@ void	*second_child(char **argv, char **envp, int fd[])
 		ft_error(argv[3], 127);
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)
+	{
 		perror("outfile");
+		exit(1);
+	}
 	if (dup2(output, STDOUT_FILENO) == -1)
 		ft_error("dup2 second child", errno);
 	if (dup2(fd[0], STDIN_FILENO) == -1)
