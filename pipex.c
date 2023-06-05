@@ -6,7 +6,7 @@
 /*   By: evoronin <evoronin@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/02/06 15:09:33 by evoronin      #+#    #+#                 */
-/*   Updated: 2023/06/03 14:12:52 by evoronin      ########   odam.nl         */
+/*   Updated: 2023/06/05 15:39:51 by evoronin      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*get_path(char **cmd, char **envp)
 		cmd_path = protect(ft_strjoin(path, cmd[0]));
 		if (access(cmd_path, F_OK) == 0)
 			return (cmd_path);
+		free(path);
+		free(cmd_path);
 		i++;
 	}
 	ft_error(cmd[0], 127);
@@ -61,7 +63,7 @@ void	*first_child(char **argv, char **envp, int fd[])
 	input = open(argv[1], O_RDONLY);
 	if (input == -1)
 	{
-		perror("infile");
+		perror(argv[1]);
 		exit(1);
 	}
 	if (dup2(input, STDIN_FILENO) == -1)
@@ -86,7 +88,7 @@ void	*second_child(char **argv, char **envp, int fd[])
 	output = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (output == -1)
 	{
-		perror("outfile");
+		perror(argv[4]);
 		exit(1);
 	}
 	if (dup2(output, STDOUT_FILENO) == -1)
